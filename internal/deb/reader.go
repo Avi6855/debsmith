@@ -477,7 +477,11 @@ func normalizeDataPath(value string) (string, error) {
 
 	cleaned := strings.ReplaceAll(value, "\\", "/")
 	cleaned = strings.TrimPrefix(cleaned, "./")
-	cleaned = strings.TrimPrefix(cleaned, "/")
+
+	if strings.HasPrefix(cleaned, "/") {
+		return "", fmt.Errorf("path is absolute: %q", value)
+	}
+
 	cleaned = path.Clean(cleaned)
 
 	if cleaned == "." || cleaned == "" {

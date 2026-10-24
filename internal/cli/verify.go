@@ -37,7 +37,9 @@ func (a *app) verifyCommand() *cobra.Command {
 				return err
 			}
 
-			a.ui.Step("Verifying reproducibility")
+			if !jsonOutput {
+				a.ui.Step("Verifying reproducibility")
+			}
 
 			result, err := repro.Verify(repro.Options{
 				ProjectPath:        project,

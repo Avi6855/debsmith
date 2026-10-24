@@ -78,6 +78,9 @@ required at build time.`,
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			application.ui.Out = cmd.OutOrStdout()
+			application.ui.Err = cmd.ErrOrStderr()
+
 			noColor, err := cmd.Flags().GetBool("no-color")
 			if err != nil {
 				return err

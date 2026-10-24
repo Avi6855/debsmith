@@ -39,7 +39,9 @@ func (a *app) buildCommand() *cobra.Command {
 				return err
 			}
 
-			a.ui.Step("Building package")
+			if !jsonOutput {
+				a.ui.Step("Building package")
+			}
 
 			result, err := build.Run(build.Options{
 				ProjectPath:        project,

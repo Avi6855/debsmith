@@ -49,7 +49,9 @@ func (a *app) sourceCommand() *cobra.Command {
 				return err
 			}
 
-			a.ui.Step("Building source package")
+			if !jsonOutput {
+				a.ui.Step("Building source package")
+			}
 
 			result, err := sourcepkg.Build(parsed, sourcepkg.Options{
 				OutDir:     output,

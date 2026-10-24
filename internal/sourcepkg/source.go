@@ -35,9 +35,9 @@ type Options struct {
 
 // Result lists the generated files.
 type Result struct {
-	DSC    string
-	Files  []string
-	Signed bool
+	DSC    string   `json:"dsc"`
+	Files  []string `json:"files"`
+	Signed bool     `json:"signed"`
 }
 
 type checksum struct {

@@ -100,6 +100,52 @@ func TestBuildInspectLint(t *testing.T) {
 	}
 }
 
+func TestJSONOutputsArePure(t *testing.T) {
+	dir := project(t)
+	out := t.TempDir()
+
+	buildRoot := NewRootCommand()
+	buildRoot.SetOut(&bytes.Buffer{})
+	buildRoot.SetErr(&bytes.Buffer{})
+	buildRoot.SetArgs([]string{"build", dir, "-o", out, "--epoch", "1700000000"})
+
+	if err := buildRoot.Execute(); err != nil {
+		t.Fatal(err)
+	}
+
+	artifact := filepath.Join(out, "cli-demo_1.0.0-1_all.deb")
+
+	cases := []struct {
+		name string
+		args []string
+	}{
+		{"inspect-verify", []string{"inspect", artifact, "--json", "--verify"}},
+		{"repo", []string{"repo", out, "--json", "--epoch", "1700000000"}},
+		{"verify-repro", []string{"verify-repro", dir, "--json", "--epoch", "1700000000"}},
+	}
+
+	for _, test := range cases {
+		t.Run(test.name, func(t *testing.T) {
+			root := NewRootCommand()
+
+			var stdout, stderr bytes.Buffer
+
+			root.SetOut(&stdout)
+			root.SetErr(&stderr)
+			root.SetArgs(test.args)
+
+			if err := root.Execute(); err != nil {
+				t.Fatalf("%s: %v\n%s", test.name, err, stderr.String())
+			}
+
+			var document any
+			if err := json.Unmarshal(stdout.Bytes(), &document); err != nil {
+				t.Fatalf("%s output is not valid JSON: %v\n%s", test.name, err, stdout.String())
+			}
+		})
+	}
+}
+
 func TestLintSARIF(t *testing.T) {
 	dir := project(t)
 	out := t.TempDir()

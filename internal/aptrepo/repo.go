@@ -56,11 +56,11 @@ type Package struct {
 
 // Result reports what was generated.
 type Result struct {
-	Packages      int
-	Architectures []string
-	IndexFiles    []string
-	ReleasePath   string
-	Signed        bool
+	Packages      int      `json:"packages"`
+	Architectures []string `json:"architectures"`
+	IndexFiles    []string `json:"indexFiles"`
+	ReleasePath   string   `json:"releasePath"`
+	Signed        bool     `json:"signed"`
 }
 
 type indexFile struct {

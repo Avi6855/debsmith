@@ -48,7 +48,9 @@ func (a *app) repoCommand() *cobra.Command {
 				return err
 			}
 
-			a.ui.Step("Building APT repository")
+			if !jsonOutput {
+				a.ui.Step("Building APT repository")
+			}
 
 			result, err := aptrepo.Build(aptrepo.Options{
 				Dir:           directory,

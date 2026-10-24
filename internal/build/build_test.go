@@ -113,6 +113,36 @@ func TestRun(t *testing.T) {
 	}
 }
 
+func TestRunHonoursManifestSBOM(t *testing.T) {
+	t.Parallel()
+
+	dir := project(t)
+	manifestPath := filepath.Join(dir, "debsmith.yaml")
+
+	content, err := os.ReadFile(manifestPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	content = append(content, []byte("\nsbom: true\n")...)
+	if err := os.WriteFile(manifestPath, content, 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	result, err := Run(Options{ProjectPath: dir, Output: t.TempDir(), Epoch: fixedEpoch})
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+
+	if result.SBOM == "" {
+		t.Fatal("manifest sbom: true did not produce a sidecar")
+	}
+
+	if _, err := os.Stat(result.SBOM); err != nil {
+		t.Fatalf("SBOM: %v", err)
+	}
+}
+
 func TestRunIsDeterministic(t *testing.T) {
 	t.Parallel()
 

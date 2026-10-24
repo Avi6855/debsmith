@@ -127,7 +127,7 @@ func Run(options Options) (*Result, error) {
 		Epoch:         epoch.Unix(),
 	}
 
-	if options.SBOM {
+	if options.SBOM || parsed.SBOM {
 		archive, err := deb.ReadFile(artifact)
 		if err != nil {
 			return nil, err

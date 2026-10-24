@@ -45,7 +45,14 @@ echo "==> dpkg -s hello"
 dpkg -s hello
 
 echo "==> lintian"
-lintian "$ARTIFACT" || true
+LINTIAN_LOG="/tmp/debsmith-lintian.log"
+lintian "$ARTIFACT" >"$LINTIAN_LOG" 2>&1 || true
+cat "$LINTIAN_LOG"
+
+if grep -qE '^E:' "$LINTIAN_LOG"; then
+    echo "error: lintian reported errors" >&2
+    exit 1
+fi
 
 echo "==> extracting the source package"
 rm -rf /tmp/src

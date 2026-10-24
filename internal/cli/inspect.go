@@ -46,7 +46,7 @@ func (a *app) inspectCommand() *cobra.Command {
 				a.renderInspection(cmd.OutOrStdout(), archive, contents)
 			}
 
-			if verify {
+			if verify && !jsonOutput {
 				if problems == 0 {
 					a.ui.Success("checksums verified")
 				} else {
@@ -72,7 +72,7 @@ func (a *app) inspectCommand() *cobra.Command {
 func (a *app) renderInspection(w io.Writer, archive *deb.Archive, contents bool) {
 	a.ui.Step("Inspecting %s", archive.Control.Package)
 
-	fmt.Fprintf(w, "  format:        debian-binary %s", archive.DebianBinary)
+	fmt.Fprintf(w, "  format:        debian-binary %s\n", strings.TrimSpace(archive.DebianBinary))
 	fmt.Fprintf(w, "  control:       %s\n", archive.ControlCompression)
 	fmt.Fprintf(w, "  data:          %s\n", archive.DataCompression)
 	fmt.Fprintf(w, "  size:          %s\n", humanSize(archive.Size))

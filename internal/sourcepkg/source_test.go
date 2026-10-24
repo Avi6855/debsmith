@@ -16,6 +16,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ProtonMail/go-crypto/openpgp"
+	"github.com/ProtonMail/go-crypto/openpgp/armor"
+	"github.com/ProtonMail/go-crypto/openpgp/clearsign"
+	"github.com/ProtonMail/go-crypto/openpgp/packet"
 	"github.com/ulikunitz/xz"
 
 	"github.com/Avi6855/debsmith/internal/deb"
@@ -154,6 +158,71 @@ func TestBuild(t *testing.T) {
 
 	if debianEntries["debian/rules"].Mode != 0o755 {
 		t.Fatalf("debian/rules mode = %o", debianEntries["debian/rules"].Mode)
+	}
+}
+
+func TestBuildSignsDSC(t *testing.T) {
+	t.Parallel()
+
+	entity, err := openpgp.NewEntity("DebSmith Test", "", "test@example.com", &packet.Config{
+		RSABits: 2048,
+		Time: func() time.Time {
+			return fixedEpoch.Add(-time.Hour)
+		},
+	})
+	if err != nil {
+		t.Fatalf("NewEntity: %v", err)
+	}
+
+	var key bytes.Buffer
+
+	armorWriter, err := armor.Encode(&key, openpgp.PrivateKeyType, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := entity.SerializePrivate(armorWriter, nil); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := armorWriter.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	keyPath := filepath.Join(t.TempDir(), "test.asc")
+	if err := os.WriteFile(keyPath, key.Bytes(), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	dir := writeProject(t, true)
+
+	result, err := Build(load(t, dir), Options{
+		OutDir: t.TempDir(), Epoch: fixedEpoch, SigningKey: keyPath,
+	})
+	if err != nil {
+		t.Fatalf("Build: %v", err)
+	}
+
+	if !result.Signed {
+		t.Fatal("expected a signed .dsc")
+	}
+
+	content, err := os.ReadFile(result.DSC)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	block, _ := clearsign.Decode(content)
+	if block == nil {
+		t.Fatal(".dsc is not clearsigned")
+	}
+
+	if !strings.Contains(string(block.Plaintext), "Format: 3.0 (quilt)") {
+		t.Fatalf("signed plaintext:\n%s", block.Plaintext)
+	}
+
+	if _, err := block.VerifySignature(openpgp.EntityList{entity}, nil); err != nil {
+		t.Fatalf("verify .dsc signature: %v", err)
 	}
 }
 

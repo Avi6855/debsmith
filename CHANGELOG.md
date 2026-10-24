@@ -4,6 +4,24 @@ All notable changes are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 [Semantic Versioning](https://semver.org/).
 
+## [0.1.1] - 2026-10-24
+
+### Fixed
+
+- `--json` output for `build`, `inspect`, `repo`, `source` and `verify-repro`
+  is now valid JSON; human progress lines are suppressed in JSON mode.
+- `sbom: true` in `debsmith.yaml` now generates the CycloneDX sidecar instead of
+  being ignored.
+- Repository and source-package JSON results use lower camelCase keys.
+- Archive readers reject absolute member paths, matching the documented
+  containment rules.
+- The container verification now fails when lintian reports an `E:` finding.
+
+### Added
+
+- Regression tests for extra control members, clearsigned `.dsc` files,
+  manifest-driven SBOMs and pure JSON CLI output.
+
 ## [0.1.0] - 2026-10-24
 
 ### Added

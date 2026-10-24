@@ -449,7 +449,7 @@ make e2e          # Ubuntu 24.04 container verification (Docker)
 Coverage of the core packages:
 
 ```text
-internal/deb        78.3%
+internal/deb        79.9%
 internal/policy     87.5%
 internal/sbom       82.8%
 internal/sourcepkg  76.3%
@@ -458,7 +458,7 @@ internal/tarutil    75.6%
 internal/repro      72.8%
 internal/aptrepo    72.4%
 internal/build      70.5%
-internal/cli        51.7%
+internal/cli        60.1%
 ```
 
 ## Limitations

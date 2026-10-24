@@ -165,6 +165,42 @@ func TestWriteRejectsUnsafePaths(t *testing.T) {
 	}
 }
 
+func TestWriteControlFilesRoundTrip(t *testing.T) {
+	t.Parallel()
+
+	pkg := testPackage()
+	pkg.ControlFiles = map[string][]byte{
+		"triggers": []byte("interest-noawait /usr/share/hello\n"),
+	}
+
+	var buffer bytes.Buffer
+
+	if _, err := Write(&buffer, pkg, Options{}); err != nil {
+		t.Fatalf("Write: %v", err)
+	}
+
+	archive, err := Read(bytes.NewReader(buffer.Bytes()))
+	if err != nil {
+		t.Fatalf("Read: %v", err)
+	}
+
+	triggers, ok := archive.ControlFiles["triggers"]
+	if !ok || string(triggers.Data) != "interest-noawait /usr/share/hello\n" {
+		t.Fatalf("triggers = %+v (%v)", triggers, ok)
+	}
+}
+
+func TestWriteRejectsUnknownControlFile(t *testing.T) {
+	t.Parallel()
+
+	pkg := testPackage()
+	pkg.ControlFiles = map[string][]byte{"conffiles": []byte("/etc/hello\n")}
+
+	if _, err := Write(&bytes.Buffer{}, pkg, Options{}); err == nil {
+		t.Fatal("expected unknown control file error")
+	}
+}
+
 func TestWriteRejectsUnknownScript(t *testing.T) {
 	t.Parallel()
 
@@ -252,6 +288,40 @@ func TestCompareVersions(t *testing.T) {
 	for _, test := range cases {
 		if got := CompareVersions(test.a, test.b); got != test.want {
 			t.Fatalf("CompareVersions(%q, %q) = %d, want %d", test.a, test.b, got, test.want)
+		}
+	}
+}
+
+func TestNormalizeDataPath(t *testing.T) {
+	t.Parallel()
+
+	valid := map[string]string{
+		"":                   "",
+		"./":                 "",
+		"usr/bin/hello":      "usr/bin/hello",
+		"./usr/bin/hello":    "usr/bin/hello",
+		"usr//share/./hello": "usr/share/hello",
+	}
+
+	for input, want := range valid {
+		got, err := normalizeDataPath(input)
+		if err != nil || got != want {
+			t.Fatalf("normalizeDataPath(%q) = %q, %v; want %q", input, got, err, want)
+		}
+	}
+
+	invalid := []string{
+		"../etc/passwd",
+		"foo/../../etc/passwd",
+		"/etc/passwd",
+		"//etc/passwd",
+		"/../etc/passwd",
+		"foo\x00bar",
+	}
+
+	for _, input := range invalid {
+		if _, err := normalizeDataPath(input); err == nil {
+			t.Fatalf("normalizeDataPath(%q) should fail", input)
 		}
 	}
 }

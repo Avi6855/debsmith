@@ -158,7 +158,7 @@ ship their own `debian/` directory.
 
 ## Validation summary
 
-`manifest.Load` fails with a list of problems when:
+Loading or staging fails with a list of problems when:
 
 - a package name, version, revision, architecture or maintainer is malformed;
 - the description is empty or spans multiple lines;
