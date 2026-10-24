@@ -1,0 +1,31 @@
+name: hello
+version: "1.0.0"
+revision: "1"
+architecture: all
+maintainer: "Avinash Rajendra Patil <avinashpatil6855@gmail.com>"
+description: "Minimal Debian package built with debsmith"
+extendedDescription: |
+  A tiny, dependency-free package that demonstrates the full debsmith
+  pipeline: deterministic archives, Debian Policy linting, source package
+  generation, SBOM output and signed APT repositories.
+homepage: "https://github.com/Avi6855/debsmith"
+section: utils
+priority: optional
+license: MIT
+copyright: "2026, Avinash Rajendra Patil"
+
+root: rootfs
+permissions:
+  /usr/bin/hello: "0755"
+
+conffiles:
+  - /etc/hello/hello.conf
+
+scripts:
+  postinst: packaging/postinst
+
+source:
+  upstream: src
+  buildDepends:
+    - debhelper-compat (= 13)
+    - build-essential

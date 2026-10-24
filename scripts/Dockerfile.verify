@@ -1,0 +1,20 @@
+# SPDX-FileCopyrightText: 2026 Avinash Rajendra Patil
+# SPDX-License-Identifier: MIT
+#
+# Reusable Ubuntu 24.04 image for end-to-end verification:
+#   docker build -f scripts/Dockerfile.verify -t debsmith-verify .
+#   docker run --rm -v "$PWD:/work" -w /work debsmith-verify bash scripts/verify-container.sh
+
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        debhelper \
+        dpkg-dev \
+        lintian \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /work

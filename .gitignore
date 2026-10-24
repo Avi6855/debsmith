@@ -1,0 +1,29 @@
+# Build output
+**/dist/
+**/out/
+/bin/
+/debsmith
+/debsmith.exe
+
+# Packaging artifacts produced by examples
+*.deb
+*.dsc
+*.changes
+*.buildinfo
+*.orig.tar.*
+*.debian.tar.*
+*.cdx.json
+
+# Test and coverage output
+coverage.out
+coverage.html
+*.test
+
+# Tooling
+.tools/
+.idea/
+.vscode/
+.DS_Store
+
+# Local repository fixtures
+/tmp/

@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  SOURCE_DATE_EPOCH: "1700000000"
+
+jobs:
+  test:
+    name: test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-24.04
+          - macos-14
+          - windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Build
+        run: go build ./...
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test -count=1 ./...
+
+  lint:
+    name: lint
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v7
+        with:
+          version: latest
+
+  reproducibility:
+    name: packaging invariants
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Build debsmith
+        run: make build
+
+      - name: Build example
+        run: bin/debsmith build examples/hello --epoch "$SOURCE_DATE_EPOCH" --sbom
+
+      - name: Lint example
+        run: bin/debsmith lint examples/hello/dist/hello_1.0.0-1_all.deb --fail-on warning
+
+      - name: Verify checksums
+        run: bin/debsmith inspect examples/hello/dist/hello_1.0.0-1_all.deb --verify
+
+      - name: Verify reproducibility
+        run: bin/debsmith verify-repro examples/hello --epoch "$SOURCE_DATE_EPOCH"
+
+      - name: Generate source package
+        run: bin/debsmith source examples/hello --epoch "$SOURCE_DATE_EPOCH"
+
+      - name: Generate repository
+        run: bin/debsmith repo examples/hello/dist --epoch "$SOURCE_DATE_EPOCH"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: example-packages
+          path: |
+            examples/hello/dist/*.deb
+            examples/hello/dist/*.dsc
+            examples/hello/dist/*.tar.*
+            examples/hello/dist/*.cdx.json
+            examples/hello/dist/dists

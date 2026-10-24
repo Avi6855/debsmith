@@ -1,0 +1,16 @@
+Source: hello
+Section: utils
+Priority: optional
+Maintainer: Avinash Rajendra Patil <avinashpatil6855@gmail.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.0
+Homepage: https://github.com/Avi6855/debsmith
+Rules-Requires-Root: no
+
+Package: hello
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Minimal Debian package built with debsmith
+ A tiny, dependency-free package that demonstrates the full debsmith
+ pipeline: deterministic archives, Debian Policy linting, source package
+ generation, SBOM output and signed APT repositories.

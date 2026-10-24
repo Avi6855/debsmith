@@ -1,0 +1,41 @@
+name: Packaging
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SOURCE_DATE_EPOCH: "1700000000"
+
+jobs:
+  ubuntu-2404:
+    name: Ubuntu 24.04 toolchain
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Build debsmith
+        run: make build
+
+      - name: Build, lint and verify the example
+        run: |
+          bin/debsmith build examples/hello --epoch "$SOURCE_DATE_EPOCH" --sbom
+          bin/debsmith lint examples/hello/dist/hello_1.0.0-1_all.deb --fail-on warning
+          bin/debsmith verify-repro examples/hello --epoch "$SOURCE_DATE_EPOCH"
+          bin/debsmith source examples/hello --epoch "$SOURCE_DATE_EPOCH"
+          bin/debsmith repo examples/hello/dist --epoch "$SOURCE_DATE_EPOCH"
+
+      - name: Run the Debian toolchain verification
+        run: sudo bash scripts/verify-container.sh

@@ -1,0 +1,48 @@
+version: 2
+
+project_name: debsmith
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: debsmith
+    main: ./cmd/debsmith
+    binary: debsmith
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X github.com/Avi6855/debsmith/internal/version.Version={{.Version}}
+      - -X github.com/Avi6855/debsmith/internal/version.Commit={{.Commit}}
+      - -X github.com/Avi6855/debsmith/internal/version.Date={{.Date}}
+
+archives:
+  - formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    files:
+      - LICENSE
+      - README.md
+      - CHANGELOG.md
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+      - "^chore:"
