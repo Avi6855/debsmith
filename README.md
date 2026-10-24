@@ -59,8 +59,8 @@ debsmith treats packaging as a compiler problem:
 - **Deterministic `.deb` writer** — sorted tar members, fixed `root:root`
   ownership, zeroed gzip mtimes, `SOURCE_DATE_EPOCH` timestamps and
   reproducible ar headers.
-- **Four compressors** — `zstd` (default data), `gzip` (default control) and
-  `xz`, with read support for legacy `bzip2`.
+- **Three compressors** — `zstd` (default data), `gzip` (default control) and
+  `xz` — plus read support for legacy `bzip2`.
 - **Staged payloads** — copy a root filesystem, individual files, directories
   and symlinks; override modes per path; declare conffiles and maintainer
   scripts.
@@ -446,7 +446,7 @@ make verify       # build, lint, SBOM, source package and repository
 make e2e          # Ubuntu 24.04 container verification (Docker)
 ```
 
-Coverage on the current tree:
+Coverage of the core packages:
 
 ```text
 internal/deb        78.3%
@@ -458,6 +458,7 @@ internal/tarutil    75.6%
 internal/repro      72.8%
 internal/aptrepo    72.4%
 internal/build      70.5%
+internal/cli        51.7%
 ```
 
 ## Limitations
