@@ -5,6 +5,7 @@ package cli
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -46,6 +47,12 @@ func (a *app) lintCommand() *cobra.Command {
 				return nil
 			}
 
+			switch strings.ToLower(strings.TrimSpace(failOn)) {
+			case "", "error", "warning", "warn", "info", "any", "never", "none":
+			default:
+				return fmt.Errorf("invalid --fail-on %q: use error, warning, info or never", failOn)
+			}
+
 			if sarif && len(args) > 1 {
 				return fmt.Errorf("--sarif accepts one artifact per report")
 			}
@@ -54,6 +61,8 @@ func (a *app) lintCommand() *cobra.Command {
 			failed := false
 
 			for _, path := range args {
+				a.ui.Debug("linting %s", path)
+
 				archive, err := deb.ReadFile(path)
 				if err != nil {
 					return err

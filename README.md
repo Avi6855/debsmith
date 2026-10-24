@@ -453,12 +453,12 @@ internal/deb        79.9%
 internal/policy     87.5%
 internal/sbom       82.8%
 internal/sourcepkg  76.3%
-internal/manifest   73.5%
+internal/manifest   74.9%
 internal/tarutil    75.6%
 internal/repro      72.8%
 internal/aptrepo    72.4%
 internal/build      70.5%
-internal/cli        60.1%
+internal/cli        60.9%
 ```
 
 ## Limitations

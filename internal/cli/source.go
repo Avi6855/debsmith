@@ -49,6 +49,9 @@ func (a *app) sourceCommand() *cobra.Command {
 				return err
 			}
 
+			a.ui.Debug("project: %s", project)
+			a.ui.Debug("epoch: %d", epoch.Unix())
+
 			if !jsonOutput {
 				a.ui.Step("Building source package")
 			}

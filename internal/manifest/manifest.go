@@ -197,6 +197,15 @@ func Load(path string) (*Manifest, error) {
 
 	parsed.Path = absolute
 	parsed.dir = filepath.Dir(absolute)
+
+	// Without an explicit revision, a trailing -N is the Debian revision.
+	if parsed.Revision == "" {
+		if index := strings.LastIndex(parsed.Version, "-"); index > 0 && index < len(parsed.Version)-1 {
+			parsed.Revision = parsed.Version[index+1:]
+			parsed.Version = parsed.Version[:index]
+		}
+	}
+
 	parsed.applyDefaults()
 
 	if err := parsed.Validate(); err != nil {

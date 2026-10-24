@@ -71,6 +71,34 @@ func TestLoadAppliesDefaults(t *testing.T) {
 	}
 }
 
+func TestLoadSplitsEmbeddedRevision(t *testing.T) {
+	t.Parallel()
+
+	const text = `
+name: hello
+version: "1.2.3-4"
+maintainer: "Avinash Patil <avinash@example.com>"
+description: "Minimal hello utility"
+`
+
+	parsed, err := Load(writeProject(t, text, nil))
+	if err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+
+	if parsed.Version != "1.2.3" || parsed.Revision != "4" {
+		t.Fatalf("version/revision = %q/%q", parsed.Version, parsed.Revision)
+	}
+
+	if parsed.VersionString() != "1.2.3-4" {
+		t.Fatalf("version string = %q", parsed.VersionString())
+	}
+
+	if parsed.UpstreamVersion() != "1.2.3" {
+		t.Fatalf("upstream version = %q", parsed.UpstreamVersion())
+	}
+}
+
 func TestLoadRejectsUnknownFields(t *testing.T) {
 	t.Parallel()
 

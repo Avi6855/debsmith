@@ -4,6 +4,18 @@ All notable changes are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 [Semantic Versioning](https://semver.org/).
 
+## [0.1.2] - 2026-10-24
+
+### Fixed
+
+- `--quiet` now prints the result summary instead of suppressing it; warnings
+  remain visible.
+- `--verbose` now emits project and epoch diagnostics to stderr.
+- A version with an embedded `-N` suffix is split into upstream version and
+  Debian revision when `revision` is omitted.
+- Invalid `--fail-on` values are rejected instead of silently falling back to
+  `error`.
+
 ## [0.1.1] - 2026-10-24
 
 ### Fixed

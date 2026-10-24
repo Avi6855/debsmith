@@ -100,6 +100,53 @@ func TestBuildInspectLint(t *testing.T) {
 	}
 }
 
+func TestQuietPrintsResults(t *testing.T) {
+	dir := project(t)
+	out := t.TempDir()
+
+	root := NewRootCommand()
+
+	var stdout, stderr bytes.Buffer
+
+	root.SetOut(&stdout)
+	root.SetErr(&stderr)
+	root.SetArgs([]string{"build", dir, "-o", out, "--epoch", "1700000000", "--quiet"})
+
+	if err := root.Execute(); err != nil {
+		t.Fatalf("build: %v", err)
+	}
+
+	if strings.Contains(stdout.String(), "==>") {
+		t.Fatalf("quiet mode printed a progress step:\n%s", stdout.String())
+	}
+
+	if !strings.Contains(stdout.String(), "artifact:") {
+		t.Fatalf("quiet mode suppressed the result:\n%s", stdout.String())
+	}
+}
+
+func TestVerbosePrintsDiagnostics(t *testing.T) {
+	dir := project(t)
+	out := t.TempDir()
+
+	root := NewRootCommand()
+
+	var stdout, stderr bytes.Buffer
+
+	root.SetOut(&stdout)
+	root.SetErr(&stderr)
+	root.SetArgs([]string{"build", dir, "-o", out, "--epoch", "1700000000", "--verbose"})
+
+	if err := root.Execute(); err != nil {
+		t.Fatalf("build: %v", err)
+	}
+
+	if !strings.Contains(stderr.String(), "project:") ||
+		!strings.Contains(stderr.String(), "epoch:") {
+		t.Fatalf("verbose diagnostics missing:\n%s", stderr.String())
+	}
+}
+
 func TestJSONOutputsArePure(t *testing.T) {
 	dir := project(t)
 	out := t.TempDir()
@@ -192,6 +239,16 @@ func TestLintListChecks(t *testing.T) {
 	if !strings.Contains(stdout.String(), "DSM001") ||
 		!strings.Contains(stdout.String(), "30 checks") {
 		t.Fatalf("output:\n%s", stdout.String())
+	}
+}
+
+func TestLintRejectsInvalidFailOn(t *testing.T) {
+	root := NewRootCommand()
+	root.SetArgs([]string{"lint", "missing.deb", "--fail-on", "sometimes"})
+
+	err := root.Execute()
+	if err == nil || !strings.Contains(err.Error(), "--fail-on") {
+		t.Fatalf("error = %v", err)
 	}
 }
 

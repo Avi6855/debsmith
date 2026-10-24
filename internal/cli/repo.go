@@ -48,6 +48,9 @@ func (a *app) repoCommand() *cobra.Command {
 				return err
 			}
 
+			a.ui.Debug("directory: %s", directory)
+			a.ui.Debug("epoch: %d", epoch.Unix())
+
 			if !jsonOutput {
 				a.ui.Step("Building APT repository")
 			}

@@ -37,8 +37,8 @@ source:
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
 | `name` | string | yes | — | Binary package name. At least two characters: lowercase letters, digits, `+`, `-`, `.`; must start alphanumeric. |
-| `version` | string | yes | — | Upstream version. Starts with a digit; `[A-Za-z0-9.+~:-]`. Without `revision`, may contain `-`. |
-| `revision` | string | no | `1` | Debian revision. `[A-Za-z0-9.+~]`. |
+| `version` | string | yes | — | Upstream version. Starts with a digit; `[A-Za-z0-9.+~:-]`. A trailing `-N` is split into the Debian revision when `revision` is omitted. |
+| `revision` | string | no | `1` | Debian revision. `[A-Za-z0-9.+~]`. If set, `version` must not contain `-`. |
 | `architecture` | string | no | host dpkg arch | Target architecture (`amd64`, `arm64`, `i386`, `armhf`, …) or `all`. |
 | `maintainer` | string | yes | — | `Name <email@example.com>`. |
 | `description` | string | yes | — | One-line synopsis, at most 80 characters is recommended. |

@@ -67,11 +67,8 @@ func (u *UI) Step(format string, args ...any) {
 	fmt.Fprintln(u.Out, u.paint(bold+cyan, "==> "+format, args...))
 }
 
-// Success prints a successful result.
+// Success prints a successful result. Results are shown in quiet mode.
 func (u *UI) Success(format string, args ...any) {
-	if u.Quiet {
-		return
-	}
 	fmt.Fprintln(u.Out, u.paint(green, "  ✓ "+format, args...))
 }
 
@@ -83,19 +80,13 @@ func (u *UI) Info(format string, args ...any) {
 	fmt.Fprintln(u.Out, u.paint(gray, "  • "+format, args...))
 }
 
-// Detail prints an indented detail line.
+// Detail prints an indented result detail. Details are shown in quiet mode.
 func (u *UI) Detail(format string, args ...any) {
-	if u.Quiet {
-		return
-	}
 	fmt.Fprintln(u.Out, u.paint(gray, "    "+format, args...))
 }
 
-// Warn prints a warning to stderr.
+// Warn prints a warning to stderr. Warnings are shown in quiet mode.
 func (u *UI) Warn(format string, args ...any) {
-	if u.Quiet {
-		return
-	}
 	fmt.Fprintln(u.Err, u.paint(yellow, "  ! "+format, args...))
 }
 

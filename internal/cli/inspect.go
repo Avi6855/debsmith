@@ -30,6 +30,8 @@ func (a *app) inspectCommand() *cobra.Command {
 				return err
 			}
 
+			a.ui.Debug("members: %d, payload entries: %d", len(archive.Members), len(archive.Entries))
+
 			audit := archive.AuditMD5()
 			problems := len(audit.Mismatched) + len(audit.MissingSums) + len(audit.MissingFiles)
 
