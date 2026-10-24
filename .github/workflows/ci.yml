@@ -94,7 +94,7 @@ jobs:
         run: bin/debsmith repo examples/hello/dist --epoch "$SOURCE_DATE_EPOCH"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: example-packages
           path: |
