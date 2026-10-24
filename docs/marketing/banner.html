@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>debsmith banner</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 1200px;
+    height: 627px;
+    overflow: hidden;
+  }
+
+  body {
+    background:
+      radial-gradient(900px 480px at 88% 8%, rgba(94, 234, 212, 0.16), transparent 60%),
+      radial-gradient(760px 520px at 6% 96%, rgba(167, 139, 250, 0.16), transparent 62%),
+      linear-gradient(145deg, #080D1A 0%, #0C1426 55%, #0A1120 100%);
+    color: #E7ECF7;
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    padding: 40px 48px 34px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  body::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.055) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(760px 420px at 62% 42%, #000 20%, transparent 78%);
+            mask-image: radial-gradient(760px 420px at 62% 42%, #000 20%, transparent 78%);
+    pointer-events: none;
+  }
+
+  header, .content, footer { position: relative; z-index: 1; }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 46px;
+  }
+
+  .mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    background: linear-gradient(140deg, #5EEAD4 0%, #38BDF8 52%, #A78BFA 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #071018;
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    box-shadow: 0 8px 26px rgba(56, 189, 248, 0.28);
+  }
+
+  .wordmark {
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+  }
+
+  .chips { display: flex; gap: 7px; margin-left: 8px; }
+
+  .chip {
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.4px;
+    color: #9FB0CE;
+    border: 1px solid #253450;
+    background: rgba(17, 26, 45, 0.72);
+    border-radius: 999px;
+    padding: 4px 9px;
+  }
+
+  .chip.mint { color: #5EEAD4; border-color: rgba(94, 234, 212, 0.35); background: rgba(94, 234, 212, 0.08); }
+
+  .repo {
+    margin-left: auto;
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 12px;
+    color: #7C8BA8;
+  }
+
+  h1 {
+    margin-top: 17px;
+    font-size: 42px;
+    line-height: 1.08;
+    letter-spacing: -1.2px;
+    font-weight: 720;
+    max-width: 660px;
+  }
+
+  h1 .accent {
+    background: linear-gradient(96deg, #5EEAD4 0%, #7DD3FC 48%, #A78BFA 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .lede {
+    margin-top: 9px;
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: #A6B3CD;
+    max-width: 620px;
+  }
+
+  .content {
+    display: flex;
+    gap: 26px;
+    margin-top: 18px;
+    flex: 1;
+  }
+
+  .left { width: 606px; display: flex; flex-direction: column; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .card {
+    border: 1px solid #1F2C45;
+    background: linear-gradient(160deg, rgba(20, 30, 51, 0.92), rgba(13, 21, 38, 0.92));
+    border-radius: 12px;
+    padding: 12px 13px 11px;
+  }
+
+  .card .title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13.5px;
+    font-weight: 650;
+    letter-spacing: -0.1px;
+  }
+
+  .dot { width: 6px; height: 6px; border-radius: 50%; flex: 0 0 auto; }
+
+  .mint-dot { background: #5EEAD4; box-shadow: 0 0 9px rgba(94, 234, 212, 0.7); }
+  .sky-dot { background: #7DD3FC; box-shadow: 0 0 9px rgba(125, 211, 252, 0.7); }
+  .violet-dot { background: #A78BFA; box-shadow: 0 0 9px rgba(167, 139, 250, 0.7); }
+  .amber-dot { background: #FBBF24; box-shadow: 0 0 9px rgba(251, 191, 36, 0.65); }
+
+  .card p {
+    margin-top: 5px;
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: #8D9BB8;
+  }
+
+  .card code {
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 10.5px;
+    color: #B9C7E2;
+  }
+
+  .use {
+    margin-top: 10px;
+    border: 1px solid #223149;
+    border-radius: 10px;
+    padding: 9px 12px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+    font-size: 11.5px;
+    color: #AFBDD8;
+    background: rgba(17, 26, 45, 0.55);
+  }
+
+  .use-label {
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 9.5px;
+    letter-spacing: 1px;
+    color: #5EEAD4;
+    border: 1px solid rgba(94, 234, 212, 0.32);
+    border-radius: 4px;
+    padding: 2px 6px;
+    background: rgba(94, 234, 212, 0.07);
+  }
+
+  .sep { color: #3E4D69; }
+
+  .also {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: #8FA0BE;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 10.5px;
+    color: #93A4C2;
+    border: 1px solid #223149;
+    border-radius: 6px;
+    padding: 3px 7px;
+  }
+
+  .terminal {
+    flex: 1;
+    border: 1px solid #22314C;
+    border-radius: 14px;
+    background: linear-gradient(170deg, #0D1728, #0A1220);
+    overflow: hidden;
+    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.42);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .term-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 13px;
+    border-bottom: 1px solid #1C2941;
+    background: rgba(15, 24, 41, 0.9);
+  }
+
+  .light { width: 9px; height: 9px; border-radius: 50%; }
+  .red { background: #FF5F57; }
+  .yellow { background: #FEBC2E; }
+  .green { background: #28C840; }
+
+  .term-title {
+    margin-left: 6px;
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 10.5px;
+    color: #7B8CAA;
+  }
+
+  .term-body {
+    padding: 12px 14px;
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 11.3px;
+    line-height: 1.6;
+    color: #C4D0E6;
+    white-space: pre;
+  }
+
+  .prompt { color: #5EEAD4; }
+  .cmd { color: #E7ECF7; }
+  .ok { color: #4ADE80; }
+  .dim { color: #6C7C99; }
+  .val { color: #FBBF24; }
+  .path { color: #93C5FD; }
+
+  .term-foot {
+    margin-top: auto;
+    border-top: 1px solid #1C2941;
+    padding: 9px 14px;
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 10.5px;
+    color: #6F7F9C;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  footer {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #1B2740;
+    padding-top: 11px;
+    font-size: 11px;
+    color: #8796B4;
+  }
+
+  footer code {
+    font-family: "Cascadia Mono", Consolas, monospace;
+    color: #A9B7D2;
+    font-size: 11px;
+  }
+
+  footer .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #8EE8D4;
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 10.5px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="mark">&gt;_</div>
+  <div class="wordmark">debsmith</div>
+  <div class="chips">
+    <span class="chip mint">v0.1.2</span>
+    <span class="chip">PURE GO</span>
+    <span class="chip">MIT</span>
+  </div>
+  <div class="repo">github.com/Avi6855/debsmith</div>
+</header>
+
+<h1>One manifest in.<br><span class="accent">A reproducible .deb out.</span></h1>
+
+<p class="lede">Builds the <code>.deb</code>, runs 30 Debian Policy checks, generates <code>3.0 (quilt)</code>
+sources, signs an APT repository and proves the rebuild is byte-identical.</p>
+
+<div class="content">
+  <div class="left">
+    <div class="grid">
+      <div class="card">
+        <div class="title"><span class="dot mint-dot"></span>Deterministic .deb writer</div>
+        <p>zstd / gzip / xz, fixed <code>root:root</code>, zeroed mtimes, <code>SOURCE_DATE_EPOCH</code> timestamps.</p>
+      </div>
+      <div class="card">
+        <div class="title"><span class="dot sky-dot"></span>30 Debian Policy checks</div>
+        <p>Names, modes, checksums, conffiles, scripts, archive safety. Text, JSON or SARIF 2.1.0.</p>
+      </div>
+      <div class="card">
+        <div class="title"><span class="dot violet-dot"></span>Signed APT repository</div>
+        <p><code>pool/</code> layout, <code>Packages</code>, <code>Release</code>, clearsigned <code>InRelease</code>, <code>Release.gpg</code>.</p>
+      </div>
+      <div class="card">
+        <div class="title"><span class="dot amber-dot"></span>3.0 (quilt) sources</div>
+        <p><code>.orig.tar.gz</code>, <code>.debian.tar.xz</code> and a checksummed <code>.dsc</code>. dpkg-source ready.</p>
+      </div>
+    </div>
+
+    <div class="use">
+      <span class="use-label">USE IT FOR</span>
+      <span>CLIs</span><span class="sep">·</span>
+      <span>prebuilt binaries</span><span class="sep">·</span>
+      <span>config &amp; doc trees</span><span class="sep">·</span>
+      <span>private apt repos</span>
+    </div>
+
+    <div class="also">
+      <span class="pill">CycloneDX 1.5 SBOM</span>
+      <span class="pill">reproducibility proof</span>
+      <span class="pill">zero shell-outs</span>
+      <span class="pill">one static binary</span>
+    </div>
+  </div>
+
+  <div class="terminal">
+    <div class="term-head">
+      <span class="light red"></span><span class="light yellow"></span><span class="light green"></span>
+      <span class="term-title">debsmith — bash</span>
+    </div>
+    <div class="term-body"><span class="prompt">$</span> <span class="cmd">debsmith build examples/hello</span>
+<span class="ok">✓</span> hello <span class="val">1.0.0-1</span> (all) · 2.1 KiB
+  sha256 <span class="dim">9be1e664…c6987a8</span>
+
+<span class="prompt">$</span> <span class="cmd">debsmith lint hello.deb --fail-on warning</span>
+<span class="ok">0 errors</span> · 0 warnings · <span class="dim">30 checks</span>
+
+<span class="prompt">$</span> <span class="cmd">debsmith verify-repro examples/hello</span>
+<span class="ok">✓</span> byte-identical rebuild
+
+<span class="prompt">$</span> <span class="cmd">debsmith repo dist --sign-key release.asc</span>
+<span class="ok">✓</span> InRelease · Release.gpg · Packages.gz</div>
+    <div class="term-foot">
+      <span>Ubuntu 24.04 · dpkg · lintian · apt</span>
+      <span>0 shell-outs</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>No <code>dpkg-deb</code>, <code>ar</code>, <code>gpg</code> or <code>lintian</code> needed on the build host.</span>
+  <span class="badge">● verified against the real Debian toolchain</span>
+</footer>
+
+</body>
+</html>

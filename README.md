@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/banner.png" alt="debsmith — one manifest in, a reproducible .deb out" width="100%">
+
 # debsmith
 
 **Deterministic Debian packaging, policy linting and signed APT repositories — in pure Go.**
