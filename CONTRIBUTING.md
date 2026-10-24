@@ -1,8 +1,5 @@
 # Contributing
 
-Thanks for improving debsmith. The project is maintained by
-**Avinash Rajendra Patil**.
-
 ## Development setup
 
 Requirements:
