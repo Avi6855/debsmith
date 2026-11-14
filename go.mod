@@ -4,7 +4,7 @@ go 1.25
 
 require (
 	github.com/ProtonMail/go-crypto v1.5.2
-	github.com/klauspost/compress v1.20.3
+	github.com/klauspost/compress v1.20.4
 	github.com/spf13/cobra v1.10.2
 	github.com/ulikunitz/xz v0.5.17
 	gopkg.in/yaml.v3 v3.0.1
